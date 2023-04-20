@@ -341,7 +341,7 @@ CustomDoors.get_door_info = function(eventStatus, pid, cellDescription, objects,
         if Players[pid].data.customVariables.isDoorSelectionOn then
             -- if the hittingPid is not your own then return
             if not tableHelper.containsKeyValue(objects, "hittingPid", pid, true) then
-                return customEventHooks.makeEventStatus(false, false)
+                return 
             end
 
             local RefId = tes3mp.GetObjectRefId(0)
