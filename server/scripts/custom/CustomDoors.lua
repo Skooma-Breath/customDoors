@@ -395,7 +395,7 @@ end
 CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescription, objects, targetPlayers)
 
     local cellDescription = tes3mp.GetCell(pid)
-    tableHelper.print(CreatedDoors)
+    --tableHelper.print(CreatedDoors)
     for uniqueIndex, door in pairs(CreatedDoors) do
 
         for objectUniqueIndex, object in pairs(objects) do
