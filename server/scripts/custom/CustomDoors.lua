@@ -17,6 +17,8 @@ local cfg = {}
 
 --TODO create a book or /help menu with help info on how to use the script.
 --TODO create a method that adds the selection_tool to players inventory on login IF they are an admin AND its not in there already.
+--TODO figure out why a player can still use a door that has been removed from the CreatedDoors table with /removedoor command if 
+--they used the door before the command was run. relog or cell reset seem to fix it
 
 --just a table of all the doors that are in the realm of doors, no reason for them to be in here really
 local VanillaDoors = {
