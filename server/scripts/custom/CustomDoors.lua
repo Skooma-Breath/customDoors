@@ -184,7 +184,7 @@ local function OnPlayerAuthentifiedHandler(eventStatus, pid)
 
         door_info[pname] = {}
         Players[pid].data.customVariables.isDoorSelectionOn = false
-        local recordStore = RecordStores["book"]
+        local recordStore = RecordStores["weapon"]
 	-- check if player has the selection tool and if not spawn add it to their inventory
         -- for refId, record in pairs(recordStore.data.permanentRecords) do
         --     if  tableHelper.containsValue(Players[pid].data.inventory, "selection_tool", true) then
