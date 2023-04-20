@@ -7,7 +7,6 @@ local CustomDoors = {}
 
 local CreatedDoors = {}
 local door_info = {}
--- local isDoorSelectionOn = false --TODO move this to a player stored variable
 
 --Config--
 
