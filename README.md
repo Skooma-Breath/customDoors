@@ -13,3 +13,5 @@ Add   require("custom.CustomDoors")   to server/scripts/customScripts.lua
 
 -- `/removedoor` will remove a door that you have re routed but players that have used that door since they logged in will have to relog
    to clear the destination for them.(figure out if this can be fixed)
+   
+-- `/realmofdoors` will teleport you to the realm of doors   
