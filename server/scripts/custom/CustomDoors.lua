@@ -410,8 +410,8 @@ CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescri
         for objectUniqueIndex, object in pairs(objects) do
             -- if uniqueIndex from the CreatedDoors table == the current object being activated's uniqueIndex then do the sutuff. else do nothing.
             if objectUniqueIndex == uniqueIndex then
---                 tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors uniqueIndex: " .. tostring(uniqueIndex))
---                 tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "objectUniqueIndex: " .. tostring(objectUniqueIndex))
+                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors uniqueIndex: " .. tostring(uniqueIndex))
+                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "objectUniqueIndex: " .. tostring(objectUniqueIndex))
 
                 local splitIndex = uniqueIndex:split("-")
 
@@ -422,7 +422,7 @@ CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescri
                 tes3mp.SetObjectRefNum(splitIndex[1])
                 tes3mp.SetObjectMpNum(splitIndex[2])
                 tes3mp.SetObjectDoorTeleportState(true)
---                 tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "door.DestinationCell: " .. tostring(door.DestinationCell))
+                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "door.DestinationCell: " .. tostring(door.DestinationCell))
                 tes3mp.SetObjectDoorDestinationCell(door.DestinationCell)
                 tes3mp.SetObjectDoorDestinationPosition(door.position[1], door.position[2], door.position[3])
                 tes3mp.SetObjectDoorDestinationRotation(door.rotation.x, door.rotation.z)
@@ -431,7 +431,7 @@ CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescri
                 tes3mp.SendDoorState(false)
                 tes3mp.SendDoorDestination(false)
 
---                 tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "load_doordestination_packets has ran")
+                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "load_doordestination_packets has ran")
             end
         end
     end
