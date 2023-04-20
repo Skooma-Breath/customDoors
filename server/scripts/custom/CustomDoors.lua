@@ -1,18 +1,22 @@
 ---[[ INSTALLATION:
 --1) Save this file as "CustomDoors.lua" in server/scripts/custom
---2) Add  require("custom.CustomDoors")   to customScripts.lua
+--2) Add   require("custom.CustomDoors")   to customScripts.lua
 
 
 local CustomDoors = {}
 
+--table containing all the re routed door uniqueIndexes and destinations
 local CreatedDoors = {}
+
+--table containg temporary door info when you select a door with the selection tool
 local door_info = {}
+
 
 --Config--
 
 local cfg = {}
 
---TODO create a book with help info on how to use the script.
+--TODO create a book or /help menu with help info on how to use the script.
 --TODO create a method that adds the selection_tool to players inventory on login IF they are an admin AND its not in there already.
 
 local VanillaDoors = {
@@ -178,14 +182,18 @@ local VanillaDoors = {
 
 --Functions--
 
+--TODO make copy/paste commands for creating new doors from the door realm.
+
 local function OnPlayerAuthentifiedHandler(eventStatus, pid)
     if Players[pid] ~= nil and Players[pid]:IsLoggedIn() then
-	local pname = tes3mp.GetName(pid)
+		
+    	local pname = tes3mp.GetName(pid)
 
         door_info[pname] = {}
         Players[pid].data.customVariables.isDoorSelectionOn = false
-        local recordStore = RecordStores["weapon"]
-	-- check if player has the selection tool and if not spawn add it to their inventory
+		
+	-- check if selection_tool is in players inventory and add it if they are admin and it its not in there
+        --local recordStore = RecordStores["weapon"]
         -- for refId, record in pairs(recordStore.data.permanentRecords) do
         --     if  tableHelper.containsValue(Players[pid].data.inventory, "selection_tool", true) then
         --         tes3mp.MessageBox(pid, -1, "")
@@ -202,7 +210,7 @@ local function SpawnVanillaDoors(pid, cmd)
     --TODO tweak this for best results when placing objects with /paste command
     local PosX = (100 * math.sin(playerAngleZ) + (tes3mp.GetPosX(pid) - 100))
     local PosY = (100 * math.cos(playerAngleZ) + (tes3mp.GetPosY(pid) + 100))
-    local PosZ = (100 * math.sin(-playerAngleX) + (tes3mp.GetPosZ(pid)))
+    local PosZ = (100 * math.sin(-playerAngleX) + (tes3mp.GetPosZ(pid) + 100))
 
     local location = {
         posX = PosX, posY = PosY, posZ = PosZ,
@@ -213,12 +221,20 @@ local function SpawnVanillaDoors(pid, cmd)
 
     logicHandler.CreateObjectAtLocation(cell, location, objectData, "place")
 
-    --change decorateScript below to whatever you named your global in customScripts when requiring your Decorate Script
+    --change decorateScript to whatever you named your global in customScripts when requiring your Decorate Script
     --and uncomment to have object selected in /dh after you place it with /paste
-    
-    --local uniqueIndex = tostring( door_info[pname].refNum .. "-" ..  door_info[pname].mpNum)	
-    -- decorateScript.SetSelectedObject(pid, uniqueIndex)
 
+    -- decorateScript.SetSelectedObject(pid, furnRefIndex)
+
+end
+
+local function warpToDoorRealm(pid, cmd)
+    tes3mp.SetCell(pid, "realm of doors")
+    tes3mp.SendCell(pid)
+
+    tes3mp.SetRot(pid, 0, 0)
+    tes3mp.SetPos(pid, 0, 0, 1517)
+    tes3mp.SendPos(pid)
 end
 
 local function setDoorSelectionState(pid, cmd)
@@ -234,7 +250,7 @@ local function loadCustomDoors()
     CreatedDoors = jsonInterface.load("custom/CustomDoors.json")
 end
 
-local function removeDoor(pid, cmd)
+function removeDoor(pid, cmd)
     local pname = tes3mp.GetName(pid)
 
     local uniqueIndex = tostring( door_info[pname].refNum .. "-" ..  door_info[pname].mpNum)
@@ -244,8 +260,8 @@ end
 
 local function CreateCustomDoorsJson()
     if jsonInterface.load("custom/CustomDoors.json") ~= nil then
-    loadCustomDoors()
-    tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors.json was loaded into server memory.")
+        loadCustomDoors()
+        tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors.json was loaded into server memory.")
     else
 	saveCustomDoors()
         tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors.json was created.")
@@ -315,9 +331,9 @@ CustomDoors.get_door_info = function(eventStatus, pid, cellDescription, objects,
             local MpNum = tes3mp.GetObjectMpNum(0)
             local RefNum = tes3mp.GetObjectRefNum(0)
 
-             door_info[pname].refId = RefId
-             door_info[pname].mpNum = MpNum
-             door_info[pname].refNum = RefNum
+            door_info[pname].refId = RefId
+            door_info[pname].mpNum = MpNum
+            door_info[pname].refNum = RefNum
 
             tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. " door_info[pname].refId: " .. tostring( door_info[pname].refId))
             tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. " door_info[pname].refNum: " .. tostring( door_info[pname].refNum))
@@ -385,8 +401,8 @@ CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescri
         for objectUniqueIndex, object in pairs(objects) do
             -- if uniqueIndex from the CreatedDoors table == the current object being activated's uniqueIndex then do the sutuff. else do nothing.
             if objectUniqueIndex == uniqueIndex then
-                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors uniqueIndex: " .. tostring(uniqueIndex))
-                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "objectUniqueIndex: " .. tostring(objectUniqueIndex))
+--                 tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors uniqueIndex: " .. tostring(uniqueIndex))
+--                 tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "objectUniqueIndex: " .. tostring(objectUniqueIndex))
 
                 local splitIndex = uniqueIndex:split("-")
 
@@ -397,7 +413,7 @@ CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescri
                 tes3mp.SetObjectRefNum(splitIndex[1])
                 tes3mp.SetObjectMpNum(splitIndex[2])
                 tes3mp.SetObjectDoorTeleportState(true)
-                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "door.DestinationCell: " .. tostring(door.DestinationCell))
+--                 tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "door.DestinationCell: " .. tostring(door.DestinationCell))
                 tes3mp.SetObjectDoorDestinationCell(door.DestinationCell)
                 tes3mp.SetObjectDoorDestinationPosition(door.position[1], door.position[2], door.position[3])
                 tes3mp.SetObjectDoorDestinationRotation(door.rotation.x, door.rotation.z)
@@ -405,6 +421,8 @@ CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescri
 
                 tes3mp.SendDoorState(false)
                 tes3mp.SendDoorDestination(false)
+
+--                 tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "load_doordestination_packets has ran")
             end
         end
     end
@@ -415,11 +433,13 @@ customCommandHooks.registerCommand("paste", SpawnVanillaDoors)
 customCommandHooks.registerCommand("copy", setDoorSelectionState)
 customCommandHooks.registerCommand("setdoor", CustomDoors.set_door_destination)
 customCommandHooks.registerCommand("removedoor", removeDoor)
+customCommandHooks.registerCommand("realmofdoors", warpToDoorRealm)
 
 customCommandHooks.setRankRequirement("copy", 2)
 customCommandHooks.setRankRequirement("paste", 2)
 customCommandHooks.setRankRequirement("setdoor", 2)
 customCommandHooks.setRankRequirement("removeDoor", 2)
+customCommandHooks.setRankRequirement("realmofdoors", 2)
 
 customEventHooks.registerValidator("OnObjectHit", CustomDoors.get_door_info)
 
