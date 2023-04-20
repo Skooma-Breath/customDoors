@@ -13,12 +13,12 @@ local door_info = {}
 
 
 --Config--
-
 local cfg = {}
 
 --TODO create a book or /help menu with help info on how to use the script.
 --TODO create a method that adds the selection_tool to players inventory on login IF they are an admin AND its not in there already.
 
+--just a table of all the doors that are in the realm of doors, no reason for them to be in here really
 local VanillaDoors = {
 
   -- "door_redoran_tower_01", TODO make door with this model to showcase
