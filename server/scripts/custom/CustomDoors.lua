@@ -210,6 +210,13 @@ local function OnPlayerAuthentifiedHandler(eventStatus, pid)
     end
 end
 
+local function OnPlayerItemUseHandler(eventStatus, pid, itemRefId)
+
+    if itemRefId == "selection_tool" then
+        tes3mp.SendMessage(pid, color.Silver .. "Initiate door selection with the " .. color.LimeGreen .. "/copy " .. color.Silver .. "command\n")
+    end
+end
+
 local function SpawnVanillaDoors(pid, cmd)
 
     local pname = tes3mp.GetName(pid)
@@ -357,13 +364,7 @@ CustomDoors.get_door_info = function(eventStatus, pid, cellDescription, objects,
             color.LimeGreen .. tostring(RefNum) .. "-" .. tostring(MpNum) .. color.Silver .. "to your current location.\n")
 
             Players[pid].data.customVariables.isDoorSelectionOn = false
-            return customEventHooks.makeEventStatus(false, false)
-
-        else
-
-            tes3mp.SendMessage(pid, color.Silver .. "Initiate door selection with the " .. color.LimeGreen .. "/copy " .. color.Silver .. "command\n")
-            return customEventHooks.makeEventStatus(false, false)
-
+            return customEventHooks.makeEventStatus(false, false)       
         end
     end
 end
@@ -456,5 +457,6 @@ customEventHooks.registerValidator("OnObjectHit", CustomDoors.get_door_info)
 customEventHooks.registerHandler("OnObjectActivate", CustomDoors.load_doordestination_packets)
 customEventHooks.registerHandler("OnServerPostInit", CustomDoors.OnServerPostInitHandler)
 customEventHooks.registerHandler("OnPlayerAuthentified", OnPlayerAuthentifiedHandler)
+customEventHooks.registerHandler("OnPlayerItemUse", OnPlayerItemUseHandler)
 
 return CustomDoors
