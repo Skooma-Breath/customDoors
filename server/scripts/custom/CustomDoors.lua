@@ -1,6 +1,6 @@
 ---[[ INSTALLATION:
 --1) Save this file as "CustomDoors.lua" in server/scripts/custom
---2) Add   decorateHelp = require("custom.CustomDoors")   to customScripts.lua
+--2) Add  require("custom.CustomDoors")   to customScripts.lua
 
 
 local CustomDoors = {}
