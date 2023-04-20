@@ -178,16 +178,14 @@ local VanillaDoors = {
 
 --Functions--
 
---TODO make copy/paste commands for creating new doors from the door realm.
-
 local function OnPlayerAuthentifiedHandler(eventStatus, pid)
-		if Players[pid] ~= nil and Players[pid]:IsLoggedIn() then
-				local pname = tes3mp.GetName(pid)
+    if Players[pid] ~= nil and Players[pid]:IsLoggedIn() then
+	local pname = tes3mp.GetName(pid)
 
         door_info[pname] = {}
         Players[pid].data.customVariables.isDoorSelectionOn = false
         local recordStore = RecordStores["book"]
-
+	-- check if player has the selection tool and if not spawn add it to their inventory
         -- for refId, record in pairs(recordStore.data.permanentRecords) do
         --     if  tableHelper.containsValue(Players[pid].data.inventory, "selection_tool", true) then
         --         tes3mp.MessageBox(pid, -1, "")
@@ -215,10 +213,11 @@ local function SpawnVanillaDoors(pid, cmd)
 
     logicHandler.CreateObjectAtLocation(cell, location, objectData, "place")
 
-    --change decorateHelp to whatever you named your global in customScripts when requiring your Decorate Script
+    --change decorateScript below to whatever you named your global in customScripts when requiring your Decorate Script
     --and uncomment to have object selected in /dh after you place it with /paste
-
-    -- decorateScript.SetSelectedObject(pid, furnRefIndex)
+    
+    --local uniqueIndex = tostring( door_info[pname].refNum .. "-" ..  door_info[pname].mpNum)	
+    -- decorateScript.SetSelectedObject(pid, uniqueIndex)
 
 end
 
@@ -228,14 +227,14 @@ local function setDoorSelectionState(pid, cmd)
 end
 
 local function saveCustomDoors()
-	  jsonInterface.save("custom/CustomDoors.json", CreatedDoors)
+    jsonInterface.save("custom/CustomDoors.json", CreatedDoors)
 end
 
 local function loadCustomDoors()
-	  CreatedDoors = jsonInterface.load("custom/CustomDoors.json")
+    CreatedDoors = jsonInterface.load("custom/CustomDoors.json")
 end
 
-function removeDoor(pid, cmd)
+local function removeDoor(pid, cmd)
     local pname = tes3mp.GetName(pid)
 
     local uniqueIndex = tostring( door_info[pname].refNum .. "-" ..  door_info[pname].mpNum)
@@ -245,12 +244,12 @@ end
 
 local function CreateCustomDoorsJson()
     if jsonInterface.load("custom/CustomDoors.json") ~= nil then
-		    loadCustomDoors()
-        tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors.json was loaded into server memory.")
-	  else
-		    saveCustomDoors()
+    loadCustomDoors()
+    tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors.json was loaded into server memory.")
+    else
+	saveCustomDoors()
         tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors.json was created.")
-	  end
+    end
 end
 
 CreateCustomDoorsJson()
@@ -356,8 +355,8 @@ CustomDoors.set_door_destination = function(pid, cmd)
     local rx = tes3mp.GetRotX(pid)
     local rz = tes3mp.GetRotZ(pid)
 
-     door_info[pname].position = {px, py, pz}
-     door_info[pname].rotation = {z = rz, x = rx}
+    door_info[pname].position = {px, py, pz}
+    door_info[pname].rotation = {z = rz, x = rx}
 
     tes3mp.SetObjectRefId( door_info[pname].refId)
     tes3mp.SetObjectRefNum( door_info[pname].refNum)
@@ -386,8 +385,8 @@ CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescri
         for objectUniqueIndex, object in pairs(objects) do
             -- if uniqueIndex from the CreatedDoors table == the current object being activated's uniqueIndex then do the sutuff. else do nothing.
             if objectUniqueIndex == uniqueIndex then
-                tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors uniqueIndex: " .. tostring(uniqueIndex))
-                tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "objectUniqueIndex: " .. tostring(objectUniqueIndex))
+                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "CreatedDoors uniqueIndex: " .. tostring(uniqueIndex))
+                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "objectUniqueIndex: " .. tostring(objectUniqueIndex))
 
                 local splitIndex = uniqueIndex:split("-")
 
@@ -398,7 +397,7 @@ CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescri
                 tes3mp.SetObjectRefNum(splitIndex[1])
                 tes3mp.SetObjectMpNum(splitIndex[2])
                 tes3mp.SetObjectDoorTeleportState(true)
-                tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "door.DestinationCell: " .. tostring(door.DestinationCell))
+                --tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "door.DestinationCell: " .. tostring(door.DestinationCell))
                 tes3mp.SetObjectDoorDestinationCell(door.DestinationCell)
                 tes3mp.SetObjectDoorDestinationPosition(door.position[1], door.position[2], door.position[3])
                 tes3mp.SetObjectDoorDestinationRotation(door.rotation.x, door.rotation.z)
@@ -406,8 +405,6 @@ CustomDoors.load_doordestination_packets = function(eventStatus, pid, cellDescri
 
                 tes3mp.SendDoorState(false)
                 tes3mp.SendDoorDestination(false)
-
-                tes3mp.LogAppend(enumerations.log.INFO, "------------------------- " .. "load_doordestination_packets has ran")
             end
         end
     end
