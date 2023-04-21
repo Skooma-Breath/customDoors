@@ -192,8 +192,6 @@ local VanillaDoors = {
 
 --Functions--
 
---TODO make copy/paste commands for creating new doors from the door realm.
-
 local function OnPlayerAuthentifiedHandler(eventStatus, pid)
     if Players[pid] ~= nil and Players[pid]:IsLoggedIn() then
 		
