@@ -16,7 +16,7 @@ local CustomDoors = {}
 --table containing all the re routed door uniqueIndexes and destinations
 local CreatedDoors = {}
 
---table containg temporary door info when you select a door with the selection tool
+--table containing temporary door info when you select a door with the selection tool
 local door_info = {}
 
 
