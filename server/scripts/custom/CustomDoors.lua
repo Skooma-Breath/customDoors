@@ -359,7 +359,7 @@ CustomDoors.get_door_info = function(eventStatus, pid, cellDescription, objects,
             logicHandler.RunConsoleCommandOnPlayer(pid, 'PlaySound, "book page2"', false)
             tes3mp.SendMessage(pid, color.Silver .. "Use the " .. color.LimeGreen .. "/paste " .. color.Silver .. "command to create a new door at your current location.\n")
             tes3mp.SendMessage(pid, color.Silver .. "Use the " .. color.LimeGreen .. "/setdoor " .. color.Silver .. "command to set the destination of " ..
-            color.LimeGreen .. tostring(RefNum) .. "-" .. tostring(MpNum) .. color.Silver .. "to your current location.\n")
+            color.LimeGreen .. tostring(RefNum) .. "-" .. tostring(MpNum) .. color.Silver .. " to your current location.\n")
 
             Players[pid].data.customVariables.isDoorSelectionOn = false
             return customEventHooks.makeEventStatus(false, false)       
