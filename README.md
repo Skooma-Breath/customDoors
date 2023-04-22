@@ -14,4 +14,4 @@ Add   `require("custom.CustomDoors")`   to server/scripts/customScripts.lua
 -- `/removedoor` will remove the custom destination of the door you have selected, but players that have used that door since they logged in will have to relog
    to clear the destination for them.(figure out if this can be fixed)
    
--- `/realmofdoors` will teleport you to the realm of doors   
+-- `/realmofdoors` will teleport you to the realm of doors ( a cell containing all the doors in the game )   
